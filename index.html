@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinatol</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background-color: #202124;
+      color: #e8eaed;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-size: 92px;
+      font-weight: normal;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      background-color: #303134;
+      color: #e8eaed;
+      border: 1px solid #5f6368;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border: 1px solid #dadce0;
+      background-color: #3c4043;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 15px 30px;
+      font-size: 13px;
+      background-color: #171717;
+      color: #999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Infinatol</h1>
+
+  <div class="button-container">
+    <button onclick="window.open('https://www.google.com', '_blank')">Recherche Web</button>
+    <button onclick="showAIResponse()">IA</button>
+  </div>
+
+  <div id="response" style="margin-top: 30px; text-align: center;"></div>
+
+  <footer>
+    🌌 Projet expérimental de Navigateur développé par un français – 2025
+    <br>
+<a href="https://alexandremii.github.io/InfiCounter/" target="_blank" style="color: #8ab4f8; text-decoration: none;">InfiCounter</a>
+  </footer>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userText");
+      const chat = document.getElementById("chatMessages");
+      const message = input.value.trim();
+      if (message === "") return;
+  
+      chat.innerHTML += `<div><strong>Toi:</strong> ${message}</div>`;
+      input.value = "";
+  
+      chat.innerHTML += `<div><strong>IA:</strong> ...</div>`;
+      chat.scrollTop = chat.scrollHeight;
+  
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "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"
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: message }]
+        })
+      });
+  
+      const data = await response.json();
+      const aiReply = data.choices[0].message.content;
+      chat.lastChild.innerHTML = `<strong>IA:</strong> ${aiReply}`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+  
