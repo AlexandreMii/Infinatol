@@ -6,137 +6,1087 @@
   <title>Infinatol</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", sans-serif;
-      background-color: #1e1e1e;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
       color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Main container */
+    .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Logo section */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: slideDown 1s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     h1 {
-      font-size: 4rem;
-      margin-bottom: 20px;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      background: linear-gradient(45deg, #00ffff, #0080ff, #8000ff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease-in-out infinite;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
     }
 
-    .center-buttons {
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+
+    /* Main buttons */
+    .main-buttons {
       display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: slideUp 1s ease-out 0.3s both;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: 1px solid #555;
-      border-radius: 6px;
-      background-color: #2b2b2b;
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .main-btn {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
       color: white;
       cursor: pointer;
-      transition: 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
 
-    button:hover {
-      background-color: #00ffff;
-      color: black;
-    }
-
-    .social-buttons {
+    .main-btn::before {
+      content: '';
       position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .main-btn:hover::before {
+      left: 100%;
+    }
+
+    .main-btn:hover {
+      transform: translateY(-5px);
+      background: linear-gradient(45deg, #00ffff, #0080ff);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+      color: #000;
+    }
+
+    /* Social sidebar */
+    .social-sidebar {
+      position: fixed;
+      right: 2rem;
       top: 50%;
-      right: 40px;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-height: 90vh;
-      overflow-y: auto;
-      scrollbar-width: none;
+      gap: 1rem;
+      z-index: 100;
+      animation: slideRight 1s ease-out 0.6s both;
     }
 
-    .social-buttons a {
-      text-decoration: none;
-      color: white;
-      font-size: 1.5rem;
-      background-color: #2b2b2b;
-      padding: 12px;
+    @keyframes slideRight {
+      from { transform: translate(100px, -50%); opacity: 0; }
+      to { transform: translateY(-50%); opacity: 1; }
+    }
+
+    .social-btn {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      transition: 0.3s;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
 
-    .social-buttons a:hover {
-      background-color: #00ffff;
-      color: black;
+    /* Brand-specific colors on hover */
+    .social-btn[title="YouTube"]:hover { background: rgba(255, 0, 0, 0.2); border-color: #ff0000; }
+    .social-btn[title="TikTok"]:hover { background: rgba(255, 0, 80, 0.2); border-color: #ff0050; }
+    .social-btn[title="Instagram"]:hover { background: linear-gradient(45deg, rgba(255, 48, 64, 0.2), rgba(252, 176, 64, 0.2)); border-color: #fd1d1d; }
+    .social-btn[title="Snapchat"]:hover { background: rgba(255, 252, 0, 0.2); border-color: #fffc00; color: #000; }
+    .social-btn[title="Discord"]:hover { background: rgba(88, 101, 242, 0.2); border-color: #5865f2; }
+    .social-btn[title="WhatsApp"]:hover { background: rgba(37, 211, 102, 0.2); border-color: #25d366; }
+    .social-btn[title="Twitch"]:hover { background: rgba(145, 70, 255, 0.2); border-color: #9146ff; }
+    .social-btn[title="Spotify"]:hover { background: rgba(30, 215, 96, 0.2); border-color: #1ed760; }
+    .social-btn[title="Reddit"]:hover { background: rgba(255, 69, 0, 0.2); border-color: #ff4500; }
+    .social-btn[title="Messenger"]:hover { background: rgba(0, 132, 255, 0.2); border-color: #0084ff; }
+    .social-btn[title="Steam"]:hover { background: rgba(102, 192, 244, 0.2); border-color: #66c0f4; }
+    .social-btn[title="Epic Games"]:hover { background: rgba(0, 0, 0, 0.3); border-color: #ffffff; }
+    .social-btn[title="Roblox"]:hover { background: rgba(0, 162, 255, 0.2); border-color: #00a2ff; }
+    .social-btn[title="Itch.io"]:hover { background: rgba(250, 92, 92, 0.2); border-color: #fa5c5c; }
+    .social-btn[title="Notion"]:hover { background: rgba(0, 0, 0, 0.3); border-color: #ffffff; }
+    .social-btn[title="Canva"]:hover { background: rgba(0, 193, 207, 0.2); border-color: #00c1cf; }
+    .social-btn[title="Figma"]:hover { background: rgba(162, 89, 255, 0.2); border-color: #a259ff; }
+    .social-btn[title="GitHub"]:hover { background: rgba(33, 31, 31, 0.3); border-color: #ffffff; }
+    .social-btn[title="LinkedIn"]:hover { background: rgba(0, 119, 181, 0.2); border-color: #0077b5; }
+    .social-btn[title="PayPal"]:hover { background: rgba(0, 48, 135, 0.2); border-color: #003087; }
+    .social-btn[title="Stripe"]:hover { background: rgba(99, 91, 255, 0.2); border-color: #635bff; }
+
+    .social-btn::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
+      transform: scale(0);
+      transition: transform 0.3s;
     }
 
+    .social-btn:hover::after {
+      transform: scale(1);
+    }
+
+    .social-btn:hover {
+      transform: translateX(-10px) scale(1.1);
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffff;
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+    }
+
+    /* Floating elements */
+    .floating-element {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: rotate 20s linear infinite;
+    }
+
+    .floating-element:nth-child(1) {
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+      top: 20%;
+      right: 15%;
+      animation-delay: -5s;
+    }
+
+    .floating-element:nth-child(3) {
+      bottom: 10%;
+      left: 20%;
+      animation-delay: -10s;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
     footer {
       position: absolute;
-      bottom: 10px;
-      font-size: 0.9rem;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
-      color: #ccc;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      animation: fadeIn 1s ease-out 1s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     footer a {
       color: #00ffff;
       text-decoration: none;
+      transition: color 0.3s;
     }
 
     footer a:hover {
-      text-decoration: underline;
+      color: #8000ff;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .social-sidebar {
+        position: static;
+        transform: none;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+        padding: 0 1rem;
+      }
+
+      .main-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .main-btn {
+        width: 200px;
+        text-align: center;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .floating-element {
+        display: none;
+      }
+
+      .audio-control {
+        top: 1rem;
+        left: 1rem;
+      }
+
+      .audio-info {
+        display: none;
+      }
+
+      .nav-arrows {
+        right: 1rem;
+        bottom: 1rem;
+      }
+
+      .nav-arrow {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Audio control */
+    .audio-control {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 1000;
+      animation: slideInLeft 1s ease-out 0.8s both;
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .audio-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .audio-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.2), transparent);
+      transform: scale(0);
+      transition: transform 0.3s;
+    }
+
+    .audio-btn:hover::before {
+      transform: scale(1);
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.1);
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffff;
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    }
+
+    .audio-btn.muted {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: #ff0000;
+    }
+
+    .audio-btn.muted:hover {
+      background: rgba(255, 0, 0, 0.3);
+      border-color: #ff0000;
+      box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+    }
+
+    .audio-info {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      font-weight: 300;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+    }
+
+    .audio-control:hover .audio-info {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Volume visualization */
+    .volume-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 20px;
+      margin-left: 1rem;
+    }
+
+    .volume-bar {
+      width: 3px;
+      background: #00ffff;
+      border-radius: 2px;
+      animation: volumePulse 1s ease-in-out infinite;
+    }
+
+    .volume-bar:nth-child(1) { height: 30%; animation-delay: 0s; }
+    .volume-bar:nth-child(2) { height: 60%; animation-delay: 0.1s; }
+    .volume-bar:nth-child(3) { height: 100%; animation-delay: 0.2s; }
+    .volume-bar:nth-child(4) { height: 40%; animation-delay: 0.3s; }
+
+    /* Navigation arrows */
+    .nav-arrows {
+      position: fixed;
+      right: 2rem;
+      bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1000;
+      animation: slideInRight 1s ease-out 1s both;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .nav-arrow {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-arrow::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.2), transparent);
+      transform: scale(0);
+      transition: transform 0.3s;
+    }
+
+    .nav-arrow:hover::before {
+      transform: scale(1);
+    }
+
+    .nav-arrow:hover {
+      transform: scale(1.1);
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffff;
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    }
+
+    .nav-arrow.up:hover {
+      transform: scale(1.1) translateY(-5px);
+    }
+
+    .nav-arrow.down:hover {
+      transform: scale(1.1) translateY(5px);
+    }
+
+    /* Pulsing animation for scroll hint */
+    .nav-arrow.pulse {
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.7);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 0 15px rgba(0, 255, 255, 0);
+        transform: scale(1.05);
+      }
+    }
+
+    /* Hide arrows initially if at top/bottom */
+    .nav-arrow.hidden {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
     }
   </style>
 </head>
 <body>
+  <!-- Animated background -->
+  <div class="particles" id="particles"></div>
 
-  <h1>Infinatol</h1>
+  <!-- Floating geometric elements -->
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
 
-  <div class="center-buttons">
-    <a href="https://www.google.com" target="_blank" style="display:inline-block;">
-      <button>Recherche</button>
-    </a>
-    <a href="https://www.chatgpt.com" target="_blank" style="display:inline-block;">
-      <button>IA</button>
-    </a>
-    <button>InfiCamera</button>
-  </div>
+  <div class="container">
+    <div class="logo-section">
+      <h1>Infinatol</h1>
+      <p class="subtitle">Navigation infinie vers vos destinations préférées</p>
+    </div>
 
-  <div class="social-buttons">
-    <a href="https://youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://tiktok.com" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
-    <a href="https://instagram.com" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://snapchat.com" target="_blank" title="Snapchat"><i class="fab fa-snapchat"></i></a>
-    <a href="https://discord.com" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-    <a href="https://whatsapp.com" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://twitch.tv" target="_blank" title="Twitch"><i class="fab fa-twitch"></i></a>
-    <a href="https://spotify.com" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
-    <a href="https://reddit.com" target="_blank" title="Reddit"><i class="fab fa-reddit"></i></a>
-    <a href="https://messenger.com" target="_blank" title="Messenger"><i class="fab fa-facebook-messenger"></i></a>
-    <a href="https://store.steampowered.com" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
-    <a href="https://epicgames.com" target="_blank" title="Epic Games"><i class="fas fa-gamepad"></i></a>
-    <a href="https://roblox.com" target="_blank" title="Roblox"><i class="fas fa-cube"></i></a>
-    <a href="https://itch.io" target="_blank" title="Itch.io"><i class="fas fa-ghost"></i></a>
-    <a href="https://notion.so" target="_blank" title="Notion"><i class="fas fa-lightbulb"></i></a>
-    <a href="https://canva.com" target="_blank" title="Canva"><i class="fas fa-paint-brush"></i></a>
-    <a href="https://figma.com" target="_blank" title="Figma"><i class="fab fa-figma"></i></a>
-    <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-    <a href="https://paypal.com" target="_blank" title="PayPal"><i class="fab fa-paypal"></i></a>
-    <a href="https://stripe.com" target="_blank" title="Stripe"><i class="fas fa-credit-card"></i></a>
+    <div class="main-buttons">
+      <a href="https://www.google.com" target="_blank" class="main-btn">
+        <i class="fas fa-search" style="margin-right: 0.5rem;"></i>
+        Recherche
+      </a>
+      <a href="https://www.chatgpt.com" target="_blank" class="main-btn">
+        <i class="fas fa-robot" style="margin-right: 0.5rem;"></i>
+        IA
+      </a>
+      <button class="main-btn">
+        <i class="fas fa-camera" style="margin-right: 0.5rem;"></i>
+        InfiCamera
+      </button>
+    </div>
+
+    <!-- Audio Control -->
+    <div class="audio-control">
+      <button id="audioToggle" class="audio-btn">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <div class="audio-info">
+        <span id="audioStatus">Ambiance activée</span>
+      </div>
+    </div>
+
+    <!-- Navigation arrows -->
+    <div class="nav-arrows">
+      <button class="nav-arrow up" id="scrollUp">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button class="nav-arrow down" id="scrollDown">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+
+    <div class="social-sidebar">
+      <a href="https://youtube.com" target="_blank" class="social-btn" title="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://tiktok.com" target="_blank" class="social-btn" title="TikTok">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <a href="https://instagram.com" target="_blank" class="social-btn" title="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://snapchat.com" target="_blank" class="social-btn" title="Snapchat">
+        <i class="fab fa-snapchat"></i>
+      </a>
+      <a href="https://discord.com" target="_blank" class="social-btn" title="Discord">
+        <i class="fab fa-discord"></i>
+      </a>
+      <a href="https://whatsapp.com" target="_blank" class="social-btn" title="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="https://twitch.tv" target="_blank" class="social-btn" title="Twitch">
+        <i class="fab fa-twitch"></i>
+      </a>
+      <a href="https://spotify.com" target="_blank" class="social-btn" title="Spotify">
+        <i class="fab fa-spotify"></i>
+      </a>
+      <a href="https://reddit.com" target="_blank" class="social-btn" title="Reddit">
+        <i class="fab fa-reddit"></i>
+      </a>
+      <a href="https://messenger.com" target="_blank" class="social-btn" title="Messenger">
+        <i class="fab fa-facebook-messenger"></i>
+      </a>
+      <a href="https://store.steampowered.com" target="_blank" class="social-btn" title="Steam">
+        <i class="fab fa-steam"></i>
+      </a>
+      <a href="https://epicgames.com" target="_blank" class="social-btn" title="Epic Games">
+        <i class="fas fa-gamepad"></i>
+      </a>
+      <a href="https://roblox.com" target="_blank" class="social-btn" title="Roblox">
+        <i class="fas fa-cube"></i>
+      </a>
+      <a href="https://itch.io" target="_blank" class="social-btn" title="Itch.io">
+        <i class="fas fa-ghost"></i>
+      </a>
+      <a href="https://notion.so" target="_blank" class="social-btn" title="Notion">
+        <i class="fas fa-lightbulb"></i>
+      </a>
+      <a href="https://canva.com" target="_blank" class="social-btn" title="Canva">
+        <i class="fas fa-paint-brush"></i>
+      </a>
+      <a href="https://figma.com" target="_blank" class="social-btn" title="Figma">
+        <i class="fab fa-figma"></i>
+      </a>
+      <a href="https://github.com" target="_blank" class="social-btn" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://linkedin.com" target="_blank" class="social-btn" title="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://paypal.com" target="_blank" class="social-btn" title="PayPal">
+        <i class="fab fa-paypal"></i>
+      </a>
+      <a href="https://stripe.com" target="_blank" class="social-btn" title="Stripe">
+        <i class="fas fa-credit-card"></i>
+      </a>
+    </div>
   </div>
 
   <footer>
-    🌀 Projet expérimental de Navigateur développé par un français – 2025<br />
+    Un moteur de recherche nouvelle génération – 2025<br />
     <a href="https://alexandremii.github.io/InfiCounter/">InfiCounter</a>
   </footer>
 
+  <script>
+    // Audio context for ambient sounds
+    let audioContext;
+    let audioBuffer;
+    let source;
+    let gainNode;
+    let isPlaying = false;
+
+    // Initialize audio
+    async function initAudio() {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create ambient sound using oscillators (futuristic ambient)
+        const oscillator1 = audioContext.createOscillator();
+        const oscillator2 = audioContext.createOscillator();
+        const oscillator3 = audioContext.createOscillator();
+        
+        gainNode = audioContext.createGain();
+        const filter = audioContext.createBiquadFilter();
+        
+        // Configure oscillators for ambient pad sound
+        oscillator1.type = 'sine';
+        oscillator1.frequency.setValueAtTime(220, audioContext.currentTime);
+        oscillator2.type = 'sine';
+        oscillator2.frequency.setValueAtTime(329.63, audioContext.currentTime);
+        oscillator3.type = 'sine';
+        oscillator3.frequency.setValueAtTime(440, audioContext.currentTime);
+        
+        // Configure filter
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, audioContext.currentTime);
+        filter.Q.setValueAtTime(1, audioContext.currentTime);
+        
+        // Configure gain
+        gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
+        
+        // Connect nodes
+        oscillator1.connect(filter);
+        oscillator2.connect(filter);
+        oscillator3.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Add subtle frequency modulation
+        const lfo = audioContext.createOscillator();
+        const lfoGain = audioContext.createGain();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(0.1, audioContext.currentTime);
+        lfoGain.gain.setValueAtTime(5, audioContext.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(oscillator1.frequency);
+        
+        // Start oscillators
+        oscillator1.start();
+        oscillator2.start();
+        oscillator3.start();
+        lfo.start();
+        
+        isPlaying = true;
+        
+        // Create volume visualization
+        createVolumeVisualizer();
+        
+      } catch (error) {
+        console.log('Audio initialization failed:', error);
+      }
+    }
+
+    // Create volume bars visualization
+    function createVolumeVisualizer() {
+      const audioInfo = document.getElementById('audioStatus');
+      const volumeBars = document.createElement('div');
+      volumeBars.className = 'volume-bars';
+      
+      for (let i = 0; i < 4; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'volume-bar';
+        volumeBars.appendChild(bar);
+      }
+      
+      audioInfo.parentNode.appendChild(volumeBars);
+    }
+
+    // Toggle audio
+    function toggleAudio() {
+      const audioToggle = document.getElementById('audioToggle');
+      const audioStatus = document.getElementById('audioStatus');
+      const volumeBars = document.querySelector('.volume-bars');
+      
+      if (!audioContext) {
+        initAudio();
+        audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+        audioStatus.textContent = 'Ambiance activée';
+        audioToggle.classList.remove('muted');
+        return;
+      }
+      
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+        audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+        audioStatus.textContent = 'Ambiance activée';
+        audioToggle.classList.remove('muted');
+        if (volumeBars) volumeBars.style.display = 'flex';
+      } else {
+        audioContext.suspend();
+        audioToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        audioStatus.textContent = 'Ambiance désactivée';
+        audioToggle.classList.add('muted');
+        if (volumeBars) volumeBars.style.display = 'none';
+      }
+    }
+
+    // Create animated particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random size and position
+        const size = Math.random() * 4 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Mouse movement effect
+    document.addEventListener('mousemove', (e) => {
+      const socialBtns = document.querySelectorAll('.social-btn');
+      const mouseX = e.clientX / window.innerWidth;
+      const mouseY = e.clientY / window.innerHeight;
+      
+      socialBtns.forEach((btn, index) => {
+        const xOffset = (mouseX - 0.5) * 20;
+        const yOffset = (mouseY - 0.5) * 20;
+        btn.style.transform = `translate(${-10 + xOffset}px, ${yOffset}px) scale(1.1)`;
+      });
+    });
+
+    // Navigation arrows functionality
+    function initNavigationArrows() {
+      const scrollUpBtn = document.getElementById('scrollUp');
+      const scrollDownBtn = document.getElementById('scrollDown');
+      const socialSidebar = document.querySelector('.social-sidebar');
+      let currentSocialIndex = 0;
+      
+      // Get all social buttons
+      const socialButtons = Array.from(document.querySelectorAll('.social-btn'));
+      
+      // Smooth scroll functions
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        // Reset social navigation
+        currentSocialIndex = 0;
+        highlightSocialButton();
+      }
+      
+      function scrollToBottom() {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+        // Reset social navigation
+        currentSocialIndex = socialButtons.length - 1;
+        highlightSocialButton();
+      }
+      
+      // Navigate through social buttons
+      function navigateSocialUp() {
+        if (currentSocialIndex > 0) {
+          currentSocialIndex--;
+          highlightSocialButton();
+          scrollToSocialButton();
+        }
+      }
+      
+      function navigateSocialDown() {
+        if (currentSocialIndex < socialButtons.length - 1) {
+          currentSocialIndex++;
+          highlightSocialButton();
+          scrollToSocialButton();
+        }
+      }
+      
+      // Highlight current social button
+      function highlightSocialButton() {
+        socialButtons.forEach((btn, index) => {
+          if (index === currentSocialIndex) {
+            btn.style.transform = 'translateX(-15px) scale(1.2)';
+            btn.style.background = 'rgba(0, 255, 255, 0.3)';
+            btn.style.borderColor = '#00ffff';
+            btn.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.5)';
+          } else {
+            btn.style.transform = '';
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.boxShadow = '';
+          }
+        });
+      }
+      
+      // Scroll sidebar to show current button
+      function scrollToSocialButton() {
+        const currentButton = socialButtons[currentSocialIndex];
+        if (currentButton && window.innerWidth > 768) {
+          const buttonRect = currentButton.getBoundingClientRect();
+          const sidebarRect = socialSidebar.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          
+          // If button is outside viewport, scroll to center it
+          if (buttonRect.top < 100 || buttonRect.bottom > viewportHeight - 100) {
+            const targetY = window.pageYOffset + buttonRect.top - viewportHeight / 2;
+            window.scrollTo({
+              top: Math.max(0, targetY),
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+      
+      // Click current social button
+      function clickCurrentSocialButton() {
+        if (socialButtons[currentSocialIndex]) {
+          socialButtons[currentSocialIndex].click();
+        }
+      }
+      
+      // Check if we're in social navigation mode
+      function isInSocialMode() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        
+        // We're in social mode if we're not at the very top or bottom
+        return scrollTop > 100 && scrollTop + clientHeight < scrollHeight - 100;
+      }
+      
+      // Event listeners for arrows
+      scrollUpBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isInSocialMode()) {
+          navigateSocialUp();
+        } else {
+          scrollToTop();
+        }
+      });
+      
+      scrollDownBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isInSocialMode()) {
+          navigateSocialDown();
+        } else {
+          scrollToBottom();
+        }
+      });
+      
+      // Update arrow visibility and functionality
+      function updateArrowState() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        
+        // Update arrow icons and tooltips based on mode
+        if (isInSocialMode()) {
+          // Social navigation mode
+          scrollUpBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+          scrollUpBtn.title = 'Bouton précédent';
+          scrollDownBtn.innerHTML = '<i class="fas fa-arrow-down"></i>';
+          scrollDownBtn.title = 'Bouton suivant';
+          
+          // Show/hide based on social navigation
+          if (currentSocialIndex <= 0) {
+            scrollUpBtn.classList.add('hidden');
+          } else {
+            scrollUpBtn.classList.remove('hidden');
+          }
+          
+          if (currentSocialIndex >= socialButtons.length - 1) {
+            scrollDownBtn.classList.add('hidden');
+          } else {
+            scrollDownBtn.classList.remove('hidden');
+          }
+          
+        } else {
+          // Page navigation mode
+          scrollUpBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+          scrollUpBtn.title = 'Haut de page';
+          scrollDownBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+          scrollDownBtn.title = 'Bas de page';
+          
+          // Show/hide based on scroll position
+          if (scrollTop <= 50) {
+            scrollUpBtn.classList.add('hidden');
+          } else {
+            scrollUpBtn.classList.remove('hidden');
+          }
+          
+          if (scrollTop + clientHeight >= scrollHeight - 50) {
+            scrollDownBtn.classList.add('hidden');
+          } else {
+            scrollDownBtn.classList.remove('hidden');
+          }
+        }
+        
+        // Add pulse effect when user should scroll
+        if (scrollTop <= 100 && scrollHeight > clientHeight + 100 && !isInSocialMode()) {
+          scrollDownBtn.classList.add('pulse');
+        } else {
+          scrollDownBtn.classList.remove('pulse');
+        }
+      }
+      
+      // Reset highlights when clicking elsewhere
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-arrows') && !e.target.closest('.social-sidebar')) {
+          socialButtons.forEach(btn => {
+            btn.style.transform = '';
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.boxShadow = '';
+          });
+        }
+      });
+      
+      // Initial setup
+      updateArrowState();
+      window.addEventListener('scroll', updateArrowState);
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (isInSocialMode()) {
+            navigateSocialUp();
+          } else {
+            scrollToTop();
+          }
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (isInSocialMode()) {
+            navigateSocialDown();
+          } else {
+            scrollToBottom();
+          }
+        } else if (e.key === 'Enter' && isInSocialMode()) {
+          e.preventDefault();
+          clickCurrentSocialButton();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          scrollToTop();
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          scrollToBottom();
+        }
+      });
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      createParticles();
+      initNavigationArrows();
+      
+      // Audio toggle event
+      document.getElementById('audioToggle').addEventListener('click', toggleAudio);
+    });
+
+    // Add click ripple effect
+    document.querySelectorAll('.main-btn, .social-btn, .audio-btn, .nav-arrow').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.height, rect.width);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+          position: absolute;
+          width: ${size}px;
+          height: ${size}px;
+          left: ${x}px;
+          top: ${y}px;
+          background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 70%);
+          border-radius: 50%;
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          pointer-events: none;
+        `;
+        
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>
